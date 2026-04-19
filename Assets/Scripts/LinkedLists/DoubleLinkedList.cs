@@ -1,5 +1,7 @@
+using Sirenix.OdinInspector.Editor.Validation;
 using System;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class DoubleLinkedList<T> //: MonoBehaviour
 {
@@ -29,7 +31,7 @@ public class DoubleLinkedList<T> //: MonoBehaviour
 
     
     //->O(1)
-    public void RemoveLast()
+    public virtual void RemoveLast()
     {
 
         //Node<T> Evaluator = head;
@@ -59,7 +61,7 @@ public class DoubleLinkedList<T> //: MonoBehaviour
 
     }
     //-> O(1)
-    public void RemoveFirst()
+    public virtual void RemoveFirst()
     {
 
         if (Count <= 1)
@@ -78,7 +80,38 @@ public class DoubleLinkedList<T> //: MonoBehaviour
 
     }
 
-    public void TraverseInOrder(Action<Node<T>> action)
+    public virtual void RemoveFromPosition(Node<T> position) 
+    {
+        if (position.Next == tail)
+        {
+            RemoveLast();
+            return;
+        }
+        if(position == head)
+        {
+            RemoveFirst();
+            return;
+        }
+        position.Next.SetPrev(null);
+        position.SetNext(null);
+        tail = position;
+
+        ReCount();
+
+    }
+
+    public void ReCount()
+    {
+        Count = 0;
+        Node<T> Evaluator = head;
+        while (Evaluator != null)
+        {
+            Count++;
+            Evaluator = Evaluator.Next;
+        }
+    }
+
+    public virtual void TraverseInOrder(Action<Node<T>> action)
     {
         Node<T> Evaluator = head;
         while (Evaluator != null)
@@ -89,7 +122,7 @@ public class DoubleLinkedList<T> //: MonoBehaviour
             Evaluator = Evaluator.Next;
         }
     }
-    public void TraverseInReverse(Action<Node<T>> action)
+    public virtual void TraverseInReverse(Action<Node<T>> action)
     {
         Node<T> Evaluator = tail;
         while (Evaluator != null)
