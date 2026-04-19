@@ -9,12 +9,11 @@ public class LinkedList<T> : MonoBehaviour
     public int Count;
 
 
-    //->O(N)
+
     public virtual void Add(T value)
     {
         Node<T> tempNode = new(value);
 
-        //-> Cuando no hay nuingun elemento en la lista
         if (head == null)
         {
             head = tempNode;
@@ -34,7 +33,7 @@ public class LinkedList<T> : MonoBehaviour
         Count++;
     }
 
-    //->O(n)
+
     public void RemoveLast()
     {
 

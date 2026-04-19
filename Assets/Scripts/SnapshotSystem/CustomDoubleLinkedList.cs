@@ -1,60 +1,46 @@
 using UnityEngine;
-using Sirenix.OdinInspector;
 
 public class CustomDoubleLinkedList : DoubleLinkedList<SnapshotNode>
 {
-    public Node<SnapshotNode> pointer;
+    public Node<SnapshotNode> Pivot;
 
     public void SaveTurn()
     {
-        //base.Add(value);
-
-        if(pointer == tail)
+        if (Pivot != null && Pivot != last)
         {
-            SnapshotNode snapshot = new SnapshotNode(GameManager.instance.player, Count);
-            base.Add(snapshot);
-            ResetPointer();
-        }
-        else
-        {
-            RemoveFromPosition(pointer);
-            SnapshotNode snapshot = new SnapshotNode(GameManager.instance.player, Count);
-            base.Add(snapshot);
-            ResetPointer();
+            RemoveFrom(Pivot);
         }
 
-        
-    }   
-
-    public void ResetPointer()
-    {
-        pointer = tail;
+        SnapshotNode snapshot = new SnapshotNode(GameManager.instance.player, Count + 1);
+        Add(snapshot);
+        Pivot = last;
     }
 
-
-    public void MoveBackwards()
+    public void ResetPivot()
     {
-        if(pointer.Prev == null) return;
-
-        pointer = pointer.Prev;
+        Pivot = last;
     }
-    public void MoveForward()
-    {
-        if (pointer.Next == null) return;
 
-        pointer = pointer.Next;
+    public void Prev()
+    {
+        if (Pivot == null || Pivot.Prev == null) return;
+        Pivot = Pivot.Prev;
+    }
+
+    public void Next()
+    {
+        if (Pivot == null || Pivot.Next == null) return;
+        Pivot = Pivot.Next;
     }
 
     public void LoadTurn(Player player)
     {
-        Debug.Log("Cargando el turno: "+ pointer.Value.Turn);
-        player.transform.position = pointer.Value.playerPosition;
-        player.transform.eulerAngles =  pointer.Value.playerRotation;
-        player.str = pointer.Value.str;
-        player.dtx = pointer.Value.dtx; 
-        player.spd = pointer.Value.spd; 
-
+        if (Pivot == null) return;
+        Debug.Log("Turno actual: " + Pivot.Value.Turn);
+        player.transform.position = Pivot.Value.playerPosition;
+        player.transform.eulerAngles = Pivot.Value.playerRotation;
+        player.str = Pivot.Value.str;
+        player.dtx = Pivot.Value.dtx;
+        player.spd = Pivot.Value.spd;
     }
-
-
 }

@@ -2,15 +2,14 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+    public int health = 10;
+    public int attack = 2;
 
-    // Update is called once per frame
-    void Update()
+    public void MoveTowards(Vector3 target, float distance)
     {
-        
+        Vector3 dir = (target - transform.position);
+        dir.y = 0;
+        if (dir.magnitude < 0.1f) return;
+        transform.position += dir.normalized * distance;
     }
 }

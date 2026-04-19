@@ -1,50 +1,77 @@
-using System;
 using UnityEngine;
-using Sirenix.OdinInspector;
-using System.Collections.Generic;
-
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
-
     public CustomDoubleLinkedList snapshotSystem = new();
-
     public Player player;
 
-
-    private void Awake()
+    void Awake()
     {
-        instance = this;
+        if (instance == null) instance = this;
+        else Destroy(gameObject);
     }
 
     void Start()
     {
-
+        if (player != null)
+            SaveTurn();
     }
-    [Button]
+
+    public void EndTurn()
+    {
+
+        Enemy[] enemies = FindObjectsByType<Enemy>(FindObjectsSortMode.None);
+        foreach (var e in enemies)
+        {
+            e.MoveTowards(player.transform.position, 1f);
+        }
+
+        SaveTurn();
+    }
+
     public void SaveTurn()
     {
         snapshotSystem.SaveTurn();
-        Debug.Log("Saving turn: " + snapshotSystem.Count);
+        Debug.Log("Turno guardado: " + snapshotSystem.Count);
     }
-    //[Button]
+
     public void LoadTurn()
     {
         snapshotSystem.LoadTurn(player);
     }
-    [Button]
+
     public void NextTurn()
     {
-        snapshotSystem.MoveForward();
+        snapshotSystem.Next();
         LoadTurn();
     }
-    [Button]
+
     public void PrevTurn()
     {
-        snapshotSystem.MoveBackwards();
+        snapshotSystem.Prev();
         LoadTurn();
     }
 
+    public float moveDistance = 1f;
 
+    public void MoveForwardZ()
+    {
+        player.transform.position += new Vector3(0, 0, moveDistance);
+    }
+
+    public void MoveBackZ()
+    {
+        player.transform.position += new Vector3(0, 0, -moveDistance);
+    }
+
+    public void MoveRightX()
+    {
+        player.transform.position += new Vector3(moveDistance, 0, 0);
+    }
+
+    public void MoveLeftX()
+    {
+        player.transform.position += new Vector3(-moveDistance, 0, 0);
+    }
 }

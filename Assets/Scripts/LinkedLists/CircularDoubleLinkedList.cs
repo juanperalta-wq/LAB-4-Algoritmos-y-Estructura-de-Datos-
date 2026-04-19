@@ -1,18 +1,16 @@
 using System;
 using UnityEngine;
 
-public class CircularDoubleLinkedList<T>// : MonoBehaviour
+public class CircularDoubleLinkedList<T>
 {
     public Node<T> head = null;
     public Node<T> tail = null;
     public int Count;
 
-    //->O(1)
     public virtual void Add(T value)
     {
         Node<T> newNode = new(value);
 
-        //-> Cuando no hay nuingun elemento en la lista
         if (head == null)
         {
             head = newNode;
@@ -35,11 +33,10 @@ public class CircularDoubleLinkedList<T>// : MonoBehaviour
     }
 
 
-    //->O(1)
+
     public void RemoveLast()
     {
 
-        //Node<T> Evaluator = head;
 
         if (Count == 0)
         {
@@ -67,7 +64,7 @@ public class CircularDoubleLinkedList<T>// : MonoBehaviour
 
 
     }
-    //-> O(1)
+
     public void RemoveFirst()
     {
 
@@ -98,7 +95,7 @@ public class CircularDoubleLinkedList<T>// : MonoBehaviour
         int count = 0;
         while (count < Count)
         {
-            //  Debug.Log(Evaluator.Value);
+
             action(Evaluator);
 
             Evaluator = Evaluator.Next;
@@ -111,7 +108,7 @@ public class CircularDoubleLinkedList<T>// : MonoBehaviour
         int count = 0;
         while (count < Count)
         {
-            //  Debug.Log(Evaluator.Value);
+
             action(Evaluator);
 
             Evaluator = Evaluator.Prev;

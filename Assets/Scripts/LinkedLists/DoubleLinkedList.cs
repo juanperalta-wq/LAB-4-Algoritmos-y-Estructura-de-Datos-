@@ -1,41 +1,32 @@
-using Sirenix.OdinInspector.Editor.Validation;
 using System;
 using UnityEngine;
-using UnityEngine.UIElements;
 
-public class DoubleLinkedList<T> //: MonoBehaviour
+public class DoubleLinkedList<T>
 {
     public Node<T> head = null;
-    public Node<T> tail = null;
+    public Node<T> last = null;
     public int Count;
 
-    //->O(1)
     public virtual void Add(T value)
     {
         Node<T> newNode = new(value);
 
-        //-> Cuando no hay nuingun elemento en la lista
         if (head == null)
         {
             head = newNode;
-            tail = newNode;
+            last = newNode;
         }
-        else if(head != null )
+        else
         {
-            tail.SetNext(newNode);
-            newNode.SetPrev(tail);
-            tail = newNode;
+            last.SetNext(newNode);
+            newNode.SetPrev(last);
+            last = newNode;
         }
         Count++;
     }
 
-    
-    //->O(1)
     public virtual void RemoveLast()
     {
-
-        //Node<T> Evaluator = head;
-
         if (Count == 0)
         {
             Debug.Log("La lista esta vacia");
@@ -44,95 +35,71 @@ public class DoubleLinkedList<T> //: MonoBehaviour
         else if (Count == 1)
         {
             head = null;
-            tail = null;
+            last = null;
             Count--;
         }
-        else if (Count >= 2)
+        else
         {
-            Node<T> Evaluator = tail.Prev;
-            tail.SetPrev(null);
-            Evaluator.SetNext(null);
-            tail = Evaluator;
-
-
+            Node<T> anterior = last.Prev;
+            last.SetPrev(null);
+            anterior.SetNext(null);
+            last = anterior;
             Count--;
         }
-       
-
     }
-    //-> O(1)
+
     public virtual void RemoveFirst()
     {
-
         if (Count <= 1)
         {
             head = null;
-            tail = null;
+            last = null;
             Count--;
             return;
         }
 
-        Node<T> Evaluator = head.Next;
+        Node<T> siguiente = head.Next;
         head.SetNext(null);
-        head = Evaluator;
+        head = siguiente;
         Count--;
-
-
     }
-
-    public virtual void RemoveFromPosition(Node<T> position) 
+    public virtual void RemoveFrom(Node<T> position)
     {
-        if (position.Next == tail)
-        {
-            RemoveLast();
-            return;
-        }
-        if(position == head)
-        {
-            RemoveFirst();
-            return;
-        }
-        position.Next.SetPrev(null);
+        if (position == null) return;
+        if (position.Next == null) return;
+
+        Node<T> current = position.Next;
         position.SetNext(null);
-        tail = position;
 
-        ReCount();
-
-    }
-
-    public void ReCount()
-    {
-        Count = 0;
-        Node<T> Evaluator = head;
-        while (Evaluator != null)
+        while (current != null)
         {
-            Count++;
-            Evaluator = Evaluator.Next;
+            Node<T> next = current.Next;
+            current.SetPrev(null);
+            current.SetNext(null);
+            current = next;
+            Count--;
         }
+
+        last = position;
     }
 
     public virtual void TraverseInOrder(Action<Node<T>> action)
     {
-        Node<T> Evaluator = head;
-        while (Evaluator != null)
+        Node<T> current = head;
+        while (current != null)
         {
-            //  Debug.Log(Evaluator.Value);
-            action(Evaluator);
-
-            Evaluator = Evaluator.Next;
+            action(current);
+            current = current.Next;
         }
     }
+
     public virtual void TraverseInReverse(Action<Node<T>> action)
     {
-        Node<T> Evaluator = tail;
-        while (Evaluator != null)
+        Node<T> current = last;
+        while (current != null)
         {
-            //  Debug.Log(Evaluator.Value);
-            action(Evaluator);
-
-            Evaluator = Evaluator.Prev;
+            action(current);
+            current = current.Prev;
         }
     }
-
-
 }
